@@ -22,6 +22,7 @@ const initialState: CounterStateType = {
   errorMax: false,
   errorMin: false,
   isDisabledSet: true,
+
 }
 
 export const counterReducer = (state: CounterStateType = initialState, action: ActionsType): CounterStateType => {
