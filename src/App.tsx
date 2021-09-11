@@ -4,77 +4,108 @@ import DisplayCounter from "./components/DisplayCounter";
 import Buttons from "./components/Buttons";
 import {SetInput} from "./components/SetInput";
 import Btn from "./components/Btn";
+import {useDispatch, useSelector} from "react-redux";
+import {StateType} from "./store/store";
+import {
+  addSettingsAC,
+  changeMaxValueAC,
+  changeMinValueAC,
+  changeSettingsAC,
+  CounterStateType,
+  incCountAC,
+  resetCountAC
+} from "./store/counterReducer";
 
 function App() {
-  let [minValue, setMinValue] = useState<number | null>(getSettings().minValue);
-  let [maxValue, setMaxValue] = useState<number | null>(getSettings().maxValue);
-  let [correctSettings, setCorrectSettings] = useState(getSettings().save);
-  let [count, setCount] = useState(minValue);
+  const {
+    count,
+    minValue,
+    maxValue,
+    correctSettings,
+    errorMin,
+    errorMax,
+    isDisabledSet,
+  } = useSelector<StateType, CounterStateType>(state => state.counter)
 
-  function getSettings() {
-    const saveSettings = localStorage.getItem('settings');
-    if (saveSettings) {
-      return JSON.parse(saveSettings);
-    } else {
-      return {
-        minValue: null,
-        maxValue: null,
-        save: false
-      }
+  const dispatch = useDispatch()
 
-    }
-  }
 
-  const saveSettingsLocalStorage = (minValue: number, maxValue: number) => {
-    const settings = {minValue, maxValue, save: true};
-    localStorage.setItem('settings', JSON.stringify(settings));
-  }
-
+  // let [minValue, setMinValue] = useState<number | ''>(getSettings().minValue);
+  // let [maxValue, setMaxValue] = useState<number | null>(getSettings().maxValue);
+  // let [correctSettings, setCorrectSettings] = useState(getSettings().save);
+  // let [count, setCount] = useState(minValue);
+  //
+  // function getSettings() {
+  //   const saveSettings = localStorage.getItem('settings');
+  //   if (saveSettings) {
+  //     return JSON.parse(saveSettings);
+  //   } else {
+  //     return {
+  //       minValue: '',
+  //       maxValue: null,
+  //       save: false
+  //     }
+  //
+  //   }
+  // }
+  //
+  // const saveSettingsLocalStorage = (minValue: number, maxValue: number) => {
+  //   const settings = {minValue, maxValue, save: true};
+  //   localStorage.setItem('settings', JSON.stringify(settings));
+  // }
+  //
   const changeMinValue = (value: number) => {
-    setMinValue(value)
+    dispatch(changeMinValueAC(value))
   }
 
   const changeMaxValue = (value: number) => {
-    setMaxValue(value)
+    dispatch(changeMaxValueAC(value))
   }
 
   const incCounter = () => {
-    if (count) {
-      setCount(count + 1)
-    }
-
+    dispatch(incCountAC())
   }
 
   const resetCounter = () => {
-    setCount(minValue)
+    dispatch(resetCountAC())
   }
 
-  let errorMin = false;
-  let errorMax = false;
-  if (minValue !== null && minValue <= 0) {
-    errorMin = true
-  }
-  if (maxValue !== null && maxValue <= 0) {
-    errorMax = true
-  }
-  if (minValue !== null && maxValue !== null && minValue >= maxValue) {
-    errorMin = true
-    errorMax = true
+  const changeSettings = (value: boolean) => {
+    dispatch(changeSettingsAC(value))
   }
 
   const addSettings = () => {
-    if (!errorMin && !errorMax && minValue && maxValue) {
-      setCorrectSettings(true)
-      setCount(minValue);
-      saveSettingsLocalStorage(minValue, maxValue);
-    } else return
+    dispatch(addSettingsAC())
   }
 
-  function changeSettings(value: boolean) {
-    setCorrectSettings(value);
-  }
 
-  const tripConditionSet = (errorMin || errorMax) || (!minValue || !maxValue) || correctSettings;
+  //
+  // let errorMin = false;
+  // let errorMax = false;
+  // if (minValue !== null && minValue <= 0) {
+  //   errorMin = true
+  // }
+  // if (maxValue !== null && maxValue <= 0) {
+  //   errorMax = true
+  // }
+  // if (minValue !== null && maxValue !== null && minValue >= maxValue) {
+  //   errorMin = true
+  //   errorMax = true
+  // }
+  //
+  // const addSettings = () => {
+  //   if (!errorMin && !errorMax && minValue && maxValue) {
+  //     setCorrectSettings(true)
+  //     setCount(minValue);
+  //     saveSettingsLocalStorage(minValue, maxValue);
+  //   } else return
+  // }
+  //
+  // function changeSettings(value: boolean) {
+  //   setCorrectSettings(value);
+  // }
+  //
+  // const tripConditionSet = (errorMin || errorMax) || (!minValue || !maxValue) || correctSettings;
 
 
   return (
@@ -92,7 +123,7 @@ function App() {
                   changeSettings={changeSettings}/>
         <Btn title={'set'}
              classNameTitle={`btn btnSet`}
-             disabled={tripConditionSet}
+             disabled={(errorMin || errorMax) || isDisabledSet}
              clickFn={addSettings}/>
         <button onClick={() => {
           localStorage.clear()

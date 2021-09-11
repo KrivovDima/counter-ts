@@ -1,7 +1,7 @@
 import React from "react";
 
 type DisplayCounterPropsType = {
-  count: number | null
+  count: number | ''
   maxCount: number | null
   correctSettings: boolean
 }
@@ -12,7 +12,7 @@ function DisplayCounter(props: DisplayCounterPropsType) {
       {
         props.correctSettings ?
           props.count :
-          <span className={'warningMessage'}>Enter correct settings and save</span>
+          <span className={'warningMessage'}>Enter correct settings and set</span>
       }
 
     </div>

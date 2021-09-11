@@ -2,7 +2,7 @@ import React, {ChangeEvent} from "react";
 
 type SetInputPropsType = {
   label: string
-  value: number | null
+  value: number
   onChange: (value: number) => void
   error: boolean
   changeSettings: (value: boolean) => void
@@ -22,8 +22,9 @@ export function SetInput(props: SetInputPropsType) {
       <label className={'SetInputLabel'}>
         {props.label}
         <input onChange={changeValue}
-               value={props.value ? props.value : ''}
-               className={`inputSet ${props.error ? 'error' : ''}`} type="number"/>
+               value={props.value}
+               className={`inputSet ${props.error ? 'error' : ''}`}
+               type="number"/>
       </label>
     </div>
   )

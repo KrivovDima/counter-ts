@@ -4,9 +4,9 @@ import Btn from "./Btn";
 type ButtonsPropsType = {
   incCounter: () => void
   resetCounter: () => void
-  count: number | null
+  count: number | ''
   maxCount: number | null
-  minCount: number | null
+  minCount: number | ''
   correctSettings: boolean
 }
 
